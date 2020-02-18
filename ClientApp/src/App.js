@@ -11,6 +11,8 @@ import './custom.css'
 import Foods from './components/Foods';
 import { Container } from "@material-ui/core";
 import { ToastProvider } from "react-toast-notifications";
+
+
 /*
 export default class App extends Component {
   static displayName = App.name;

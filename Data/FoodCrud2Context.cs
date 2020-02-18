@@ -15,5 +15,7 @@ namespace FoodCrud2.Data
         }
 
         public DbSet<FoodCrud2.Models.Food> Food { get; set; }
+
+        public DbSet<FoodCrud2.Models.DayTotal> DayTotal { get; set; }
     }
 }

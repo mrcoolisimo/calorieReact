@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import * as actions from "../actions/Food";
 import { useToasts } from "react-toast-notifications";
 
+
+
 const styles = theme => ({
     root:{
         '& .MuiTextField-root': {
@@ -12,7 +14,7 @@ const styles = theme => ({
             minWidth: 230,
         },
         formControl: {
-            margin: theme.spacing(1),
+            margin: theme.spacing(10),
             minWidth: 230,
         },
         smMargin: {
@@ -30,12 +32,20 @@ const initialFieldValues ={
 
 const FoodForm = ({classes, ...props}) => {
 
+    var num = props.num
+    
     const { addToast } = useToasts()
 
     const validate = (fieldValues = values) => {
         let temp={...errors}
         if ('name' in fieldValues)
             temp.name = fieldValues.name ? "" : "This field is required."
+        if ('fats' in fieldValues)
+            temp.fats = (fieldValues.fats >= 0) ? "" : "This field must be a positive number"
+        if ('carbs' in fieldValues)
+            temp.carbs = (fieldValues.carbs >= 0) ? "" : "This field must be a positive number"
+        if ('protein' in fieldValues)
+            temp.protein = (fieldValues.protein >= 0) ? "" : "This field must be a positive number"    
         setErrors({
             ...temp
         })
@@ -52,19 +62,21 @@ const FoodForm = ({classes, ...props}) => {
         resetForm
     } =useForm(initialFieldValues,validate, props.setCurrentId)
 
-    const result = 0 + parseInt(values.fats)*10 + parseInt(values.carbs);
+    const result = parseInt( values.fats ? values.fats : 0)*9 + 
+                   parseInt( values.carbs ? values.carbs : 0)*4 +
+                   parseInt( values.protein ? values.protein : 0)*4
 
     const handleSubmit = e =>{
         e.preventDefault()
         if(validate()){
             const onSuccess = () => {
-                console.log("Toasty")
                 resetForm()
                 addToast("Submitted Successfully!", {appearance:'success'})
                 
             }
-            if(props.currentId==0)
-                props.createFood(values, onSuccess)
+            if(props.currentId==0) {
+                props.createFood(values, onSuccess, num)
+            }
             else
                 props.updateFood(props.currentId, values, onSuccess)
         }
@@ -81,7 +93,7 @@ const FoodForm = ({classes, ...props}) => {
     return (
         <form autoComplete="off" noValidate className={classes} onSubmit={handleSubmit}>
             <Grid container>
-                <Grid item xs={6}>
+                <Grid item>
                     <TextField 
                     name="name"
                     variant="outlined"
@@ -98,15 +110,15 @@ const FoodForm = ({classes, ...props}) => {
                     label="Fats"
                     value={values.fats}
                     onChange={handleInputChange}
+                    {...(errors.fats && {error:true, helperText:errors.fats})}
                     />
-                </Grid>
-                <Grid item xs={6}>
                     <TextField 
                     name="carbs"
                     variant="outlined"
                     label="Carbs"
                     value={values.carbs}
                     onChange={handleInputChange}
+                    {...(errors.carbs && {error:true, helperText:errors.carbs})}
                     />
                     <TextField 
                     name="protein"
@@ -114,20 +126,23 @@ const FoodForm = ({classes, ...props}) => {
                     label="Protein"
                     value={values.protein}
                     onChange={handleInputChange}
+                    {...(errors.protein && {error:true, helperText:errors.protein})}
                     />
-                    {result}
+                    <div>
+                        Calories: {result}
+                    </div>
                     <div>
                         <Button
                             variant="contained"
                             color="primary"
                             type="submit"
-                            className={classes.smMargin}
+                            className='float-left width-half'
                         >
                                 Submit
                         </Button>
                         <Button
                             variant="contained"
-                            className={classes.smMargin}
+                            className='float-right width-half'
                             onClick={resetForm}
                         >
                                 Reset

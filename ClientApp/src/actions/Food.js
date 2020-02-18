@@ -5,20 +5,23 @@ export const ACTION_TYPES = {
     UPDATE : 'UPDATE',
     DELETE : 'DELETE',
     FETCH_ALL : 'FETCH_ALL'
+    //FETCH_DATE : 'FETCH_DATE'
 }
 
 const formatData = data => ({
     ...data,
     // Change these into integers
-    fats : parseInt( data.fats ? data.fats : 0),
-    carbs : parseInt( data.carbs ? data.carbs : 0),
+    fats : parseInt( data.fats ? data.fats : 0 ),
+    carbs : parseInt( data.carbs ? data.carbs : 0 ),
     protein : parseInt( data.protein ? data.protein : 0 )
 })
 
-export const fetchAll = () => dispatch =>
+
+
+export const fetchAll = (num) => dispatch =>
 {
     // #3 Get the URL, perform action (get, post)
-    api.Food().fetchAll()
+    api.Food().fetchAll(num)
     .then(response => {
         // #4 Send this to the reducer
             dispatch({
@@ -30,9 +33,9 @@ export const fetchAll = () => dispatch =>
     .catch(err => console.log(err))
 }
 
-export const create = (data, onSuccess) => dispatch =>{
+export const create = (data, onSuccess, num) => dispatch =>{
     data = formatData(data)
-    api.Food().create(data)
+    api.Food().create(data,num)
     .then(res =>{
         dispatch({
             type:ACTION_TYPES.CREATE,
@@ -45,6 +48,7 @@ export const create = (data, onSuccess) => dispatch =>{
 
 export const update = (foodID, data, onSuccess) => dispatch =>{
     data = formatData(data)
+    console.log('edit',data)
     api.Food().update(foodID, data)
     .then(res =>{
         dispatch({

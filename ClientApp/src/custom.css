@@ -12,3 +12,14 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+/* Mine */
+.float-left {
+  float:left;
+}
+.float-right {
+  float:right;
+}
+.width-half {
+  width:50%;
+}

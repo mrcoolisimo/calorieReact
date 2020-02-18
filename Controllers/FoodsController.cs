@@ -20,16 +20,22 @@ namespace FoodCrud2.Controllers
         {
             _context = context;
         }
+        [BindProperty]
+        public DayTotal DayTotal { get; set; }
+
 
         // GET: api/Foods
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Food>>> GetFood()
+        public async Task<ActionResult<IEnumerable<Food>>> GetFood(int num)
         {
-            return await _context.Food.ToListAsync();
+            // var dateTime = DateTime.UtcNow.Date;
+            // return await _context.Food.Where(f => f.Date == dateTime.ToString("dd/MM/yyyy")).ToListAsync();
+                var dateTime = DateTime.UtcNow.Date.AddDays(num).AddHours(-8);
+                return await _context.Food.Where(f => f.Date == dateTime.ToString("dd/MM/yyyy")).ToListAsync();
         }
 
         // GET: api/Foods/5
-        [HttpGet("{id}")]
+        /*[HttpGet("{id}")]
         public async Task<ActionResult<Food>> GetFood(int id)
         {
             var food = await _context.Food.FindAsync(id);
@@ -40,7 +46,7 @@ namespace FoodCrud2.Controllers
             }
 
             return food;
-        }
+        }*/
 
         // PUT: api/Foods/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
@@ -51,6 +57,45 @@ namespace FoodCrud2.Controllers
             if (id != food.FoodID)
             {
                 return BadRequest();
+            }
+
+            var f00d = await _context.Food.AsNoTracking().FirstOrDefaultAsync(f => f.FoodID == id);
+            var dayTotal = await _context.DayTotal.FirstOrDefaultAsync(d => d.Date == food.Date);
+
+            //If the entry is empty and we didnt give a blank food
+            if (dayTotal == null &&
+                food.Carbs + food.Fats + food.Protein != 0)
+            {
+                DayTotal.TotalCarbs = food.Carbs;
+                DayTotal.TotalFats = food.Fats;
+                DayTotal.TotalProtein = food.Protein;
+                DayTotal.Date = food.Date;
+                _context.DayTotal.Add(DayTotal);
+            }
+            //if the entry exists and we didnt give it a blank food
+            if (dayTotal != null)
+            {
+                dayTotal.TotalCarbs += food.Carbs - f00d.Carbs;
+                dayTotal.TotalFats += food.Fats - f00d.Fats;
+                dayTotal.TotalProtein += food.Protein - f00d.Protein;
+                dayTotal.Date = food.Date;
+
+                if (dayTotal.TotalCarbs +
+                   dayTotal.TotalFats +
+                   dayTotal.TotalProtein == 0)
+                {
+                    _context.DayTotal.Remove(dayTotal);
+                }
+                else
+                {
+                    _context.Attach(dayTotal).State = EntityState.Modified;
+                }
+         
+            }
+            if (dayTotal != null &&
+               food.Carbs + food.Fats + food.Protein == 0)
+            {
+                _context.DayTotal.Remove(dayTotal);
             }
 
             _context.Entry(food).State = EntityState.Modified;
@@ -78,8 +123,30 @@ namespace FoodCrud2.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Food>> PostFood(Food food)
+        public async Task<ActionResult<Food>> PostFood(Food food, int num)
         {
+            var dateTime = DateTime.UtcNow.Date.AddDays(num).AddHours(-8);
+            food.Date = dateTime.ToString("dd/MM/yyyy");
+
+            //DayTotal = await _context.DayTotal.FirstOrDefaultAsync(d => d.DayTotalID == 1);
+            var dayTotal = await _context.DayTotal.FirstOrDefaultAsync(d => d.Date == food.Date);
+            if (dayTotal == null)
+            {
+                DayTotal.TotalCarbs = food.Carbs;
+                DayTotal.TotalFats = food.Fats;
+                DayTotal.TotalProtein = food.Protein;
+                DayTotal.Date = food.Date;
+                _context.DayTotal.Add(DayTotal);
+            }
+            else
+            {
+                dayTotal.TotalCarbs += food.Carbs;
+                dayTotal.TotalFats += food.Fats;
+                dayTotal.TotalProtein += food.Protein;
+                dayTotal.Date = food.Date;
+                _context.Attach(dayTotal).State = EntityState.Modified;
+            }
+            
             _context.Food.Add(food);
             await _context.SaveChangesAsync();
 
@@ -94,6 +161,23 @@ namespace FoodCrud2.Controllers
             if (food == null)
             {
                 return NotFound();
+            }
+
+            var dayTotal = await _context.DayTotal.FirstOrDefaultAsync(d => d.Date == food.Date);
+            dayTotal.TotalCarbs -= food.Carbs;
+            dayTotal.TotalFats -= food.Fats;
+            dayTotal.TotalProtein -= food.Protein;
+            dayTotal.Date = food.Date;
+            
+            if (dayTotal.TotalCarbs +
+                dayTotal.TotalFats +
+                dayTotal.TotalProtein == 0)
+            {
+                _context.DayTotal.Remove(dayTotal);
+            }
+            else
+            {
+                _context.Attach(dayTotal).State = EntityState.Modified;
             }
 
             _context.Food.Remove(food);

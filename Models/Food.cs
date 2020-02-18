@@ -12,5 +12,6 @@ namespace FoodCrud2.Models
 		public int Fats { get; set; }
 		public int Carbs { get; set; }
 		public int Protein { get; set; }
+		public string Date { get; set; }
 	}
 }

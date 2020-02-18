@@ -1,4 +1,5 @@
 import { ACTION_TYPES } from "../actions/Food";
+
 const initialState = {
     list:[]
 }
@@ -6,10 +7,11 @@ const initialState = {
 
 export const Food = (state=initialState, action) => {
     switch (action.type) {
+
         case ACTION_TYPES.FETCH_ALL:
             // #5 Store the data we got from the action into the list
             return {
-                ...state,
+                //...state,
                 list:[...action.payload]
             }
 

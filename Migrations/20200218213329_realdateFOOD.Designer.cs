@@ -4,14 +4,16 @@ using FoodCrud2.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodCrud2.Migrations
 {
     [DbContext(typeof(FoodCrud2Context))]
-    partial class FoodCrud2ContextModelSnapshot : ModelSnapshot
+    [Migration("20200218213329_realdateFOOD")]
+    partial class realdateFOOD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -30,6 +30,7 @@ namespace FoodCrud2.Controllers
         public async Task<ActionResult<IEnumerable<DayTotal>>> GetDayTotal(int date)
         {
             var dateTime = DateTime.UtcNow.Date;
+            date += 1;
 
             for (int index = 0; index <= 6; index++)
             {
@@ -44,11 +45,11 @@ namespace FoodCrud2.Controllers
 
                     var temp2 = new DayTotal { };
                     temp2.TotalCarbs = 0;
-                    Trace.WriteLine("Hello World2!");
                     temp2.TotalFats = 0;
                     temp2.TotalProtein = 0;
                     
-                    temp2.Date = dateTime.AddDays(date - index).AddHours(-8).ToString("dd/MM/yyyy");
+                    temp2.Date = dateTime.AddDays((date) - index).AddHours(-8).ToString("dd/MM/yyyy");
+                    temp2.RealDate = dateTime.AddDays(date - index).AddHours(-8);
 
                     _context.DayTotal.Add(temp2);
                     await _context.SaveChangesAsync();
@@ -57,25 +58,23 @@ namespace FoodCrud2.Controllers
             }
 
             var dbSet = await _context.DayTotal.Where(d => 
-                d.Date == dateTime.AddDays(date - 6).AddHours(-8).ToString("dd/MM/yyyy") ||
-                d.Date == dateTime.AddDays(date - 5).AddHours(-8).ToString("dd/MM/yyyy") ||
-                d.Date == dateTime.AddDays(date - 4).AddHours(-8).ToString("dd/MM/yyyy") ||
-                d.Date == dateTime.AddDays(date - 3).AddHours(-8).ToString("dd/MM/yyyy") ||
-                d.Date == dateTime.AddDays(date - 2).AddHours(-8).ToString("dd/MM/yyyy") ||
-                d.Date == dateTime.AddDays(date - 1).AddHours(-8).ToString("dd/MM/yyyy") ||
-                d.Date == dateTime.AddDays(date).AddHours(-8).ToString("dd/MM/yyyy")).ToListAsync();
+                d.RealDate == dateTime.AddDays(date - 6).AddHours(-8) ||
+                d.RealDate == dateTime.AddDays(date - 5).AddHours(-8) ||
+                d.RealDate == dateTime.AddDays(date - 4).AddHours(-8) ||
+                d.RealDate == dateTime.AddDays(date - 3).AddHours(-8) ||
+                d.RealDate == dateTime.AddDays(date - 2).AddHours(-8) ||
+                d.RealDate == dateTime.AddDays(date - 1).AddHours(-8) ||
+                d.RealDate == dateTime.AddDays(date).AddHours(-8))
+                .OrderByDescending(d => d.RealDate)
+                .ToListAsync();
 
             for (int index = 0; index <= 6; index++)
             {
                 var temp = await _context.DayTotal.FirstOrDefaultAsync(d =>
                 d.Date == dateTime.AddDays(date - index).AddHours(-8).ToString("dd/MM/yyyy"));
 
-
-                
-
                 if (temp.TotalCarbs + temp.TotalFats + temp.TotalProtein == 0)
                 {
-                    Trace.WriteLine("Delete!", index.ToString());
                     _context.DayTotal.Remove(temp);
                     await _context.SaveChangesAsync();
                 }

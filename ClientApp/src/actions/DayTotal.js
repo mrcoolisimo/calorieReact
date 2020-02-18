@@ -10,6 +10,7 @@ export const fetchDate = (num) => dispatch =>
     api.DayTotal().fetchDate(num)
     .then(response => {
         // #4 Send this to the reducer
+            console.log('hey',response)
             dispatch({
                 type : ACTION_TYPES.FETCH_DATE,
                 payload : response.data

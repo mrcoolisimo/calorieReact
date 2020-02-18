@@ -5,6 +5,7 @@ import * as actions2 from "../actions/DayTotal";
 
 var arr = []
 var arr2 = []
+var arr3 = []
 var dates = []
 
 var test = (data) => {
@@ -12,6 +13,7 @@ var test = (data) => {
     for (var item in data) {
             arr.unshift(data[item].totalFats);
     }
+    console.log('data',data)
     return arr;
 }
 
@@ -23,13 +25,21 @@ var test2 = (data) => {
     return arr2;
 }
 
+var test3 = (data) => {
+  arr3 = []
+  for (var item in data) {
+          arr3.unshift(data[item].totalProtein);
+  }
+  return arr3;
+}
+
 var datef = (data) => {
     dates = []
     for (var item in data) {
         //console.log(data)
         dates.unshift(data[(item)].date);
     }
-    console.log(dates)
+    
     return dates;
 }
 
@@ -37,6 +47,7 @@ const FoodChart = ({classes, ...props}) => {
       return (
         arr = test(props.DayTotal),
         arr2 = test2(props.DayTotal),
+        arr3 = test3(props.DayTotal),
         dates = datef(props.DayTotal),
         console.log('dates', dates),
         <div>
@@ -60,7 +71,16 @@ const FoodChart = ({classes, ...props}) => {
                         borderColor: 'rgba(150,0,0,1)',
                         borderWidth: 2,
                         data: arr2
-                    }
+                    },
+                    {
+                      label: 'Protein',
+                      fill: false,
+                      lineTension: 0,
+                      backgroundColor: 'rgba(0,0,150,1)',
+                      borderColor: 'rgba(0,0,150,1)',
+                      borderWidth: 2,
+                      data: arr3
+                  }
                 ]
             }}
             options={{

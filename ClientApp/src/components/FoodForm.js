@@ -3,6 +3,7 @@ import { Grid, TextField, withStyles, Button } from "@material-ui/core";
 import useForm from "./useForm";
 import { connect } from "react-redux";
 import * as actions from "../actions/Food";
+import * as actions2 from "../actions/DayTotal";
 import { useToasts } from "react-toast-notifications";
 
 
@@ -76,9 +77,11 @@ const FoodForm = ({classes, ...props}) => {
             }
             if(props.currentId==0) {
                 props.createFood(values, onSuccess, num)
+                props.fetchDate(num)
             }
             else
                 props.updateFood(props.currentId, values, onSuccess)
+                props.fetchDate(num)
         }
     }
 
@@ -162,7 +165,8 @@ const mapStateToProps = state => ({
 const mapActionToProps ={
     // #2
     createFood : actions.create,
-    updateFood : actions.update
+    updateFood : actions.update,
+    fetchDate : actions2.fetchDate
 }
 
 export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(FoodForm));

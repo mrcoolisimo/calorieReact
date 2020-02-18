@@ -27,7 +27,10 @@ const styles = theme =>({
 // var date = Date(Date.now()).split('T')[0];
 
 var num = 0
-
+var boo = false
+function buttonWait() {
+    boo = false
+  }
 
 const date = new Date();
 const year = date.getFullYear();
@@ -44,8 +47,6 @@ var theDay = theDayf(num).toDateString()
 const Foods = ({classes,...props}) => {
     const [currentId,setCurrentId] = useState(0)
     
-    
-
     useEffect(()=>{
         // #1
         props.fetchAllFoods(num)
@@ -56,16 +57,24 @@ const Foods = ({classes,...props}) => {
     const { addToast } = useToasts()
 
     const onFetchAdd = () => {
-        num += 1
-        theDay = theDayf(num).toDateString()
-        props.fetchAllFoods(num)
-        props.fetchDate(num)
+        if (!boo) {
+            boo = true
+            num += 1
+            theDay = theDayf(num).toDateString()
+            props.fetchAllFoods(num)
+            props.fetchDate(num)
+        }
+        setTimeout(buttonWait, 500)
     }
     const onFetchSubtract = () => {
-        num -= 1
-        theDay = theDayf(num).toDateString()
-        props.fetchAllFoods(num)
-        props.fetchDate(num)
+        if (!boo) {
+            boo = true
+            num -= 1
+            theDay = theDayf(num).toDateString()
+            props.fetchAllFoods(num)
+            props.fetchDate(num)
+        }
+        setTimeout(buttonWait, 500)
     }
 
     const onDelete = foodID => {
@@ -82,19 +91,19 @@ const Foods = ({classes,...props}) => {
     }
 
     
-
     return (
     <Paper className={classes.paper} elevation={5}>
         <FoodForm {...({currentId,setCurrentId,num})}/>
         <Grid container>
             <Grid item>
                 <div>
-                    
+                    {num}
                     <Button
                         variant="contained"
                         color="primary"
                         type="submit"
                         className='float-left width-half'
+                        disabled={false}
                         onClick={onFetchSubtract}
                     >
                         Yesterday
@@ -143,7 +152,7 @@ const Foods = ({classes,...props}) => {
                             }
                             </TableBody>
                     </Table>
-                    <Table>
+                    {/* <Table>
                         <TableHead className={classes.root}>
                             <TableRow>
                                 <TableCell>Total Fats</TableCell>
@@ -159,7 +168,7 @@ const Foods = ({classes,...props}) => {
                                 })
                             }
                             </TableBody>
-                    </Table>
+                        </Table> */}
                 </TableContainer>
             </Grid>
         </Grid>

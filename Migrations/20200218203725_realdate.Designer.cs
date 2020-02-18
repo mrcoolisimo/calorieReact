@@ -4,14 +4,16 @@ using FoodCrud2.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FoodCrud2.Migrations
 {
     [DbContext(typeof(FoodCrud2Context))]
-    partial class FoodCrud2ContextModelSnapshot : ModelSnapshot
+    [Migration("20200218203725_realdate")]
+    partial class realdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,9 +69,6 @@ namespace FoodCrud2.Migrations
 
                     b.Property<int>("Protein")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("RealDate")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("FoodID");
 

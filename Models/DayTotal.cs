@@ -12,5 +12,6 @@ namespace FoodCrud2.Models
 		public int TotalCarbs { get; set; }
 		public int TotalProtein { get; set; }
 		public string Date { get; set; }
+		public DateTime RealDate { get; set; }
 	}
 }

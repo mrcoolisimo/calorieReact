@@ -70,6 +70,7 @@ namespace FoodCrud2.Controllers
                 DayTotal.TotalFats = food.Fats;
                 DayTotal.TotalProtein = food.Protein;
                 DayTotal.Date = food.Date;
+                DayTotal.RealDate = food.RealDate;
                 _context.DayTotal.Add(DayTotal);
             }
             //if the entry exists and we didnt give it a blank food
@@ -125,8 +126,9 @@ namespace FoodCrud2.Controllers
         [HttpPost]
         public async Task<ActionResult<Food>> PostFood(Food food, int num)
         {
-            var dateTime = DateTime.UtcNow.Date.AddDays(num).AddHours(-8);
-            food.Date = dateTime.ToString("dd/MM/yyyy");
+            var dateTime = DateTime.UtcNow.Date.AddDays(num+1).AddHours(-8);
+            food.Date = DateTime.UtcNow.Date.AddDays(num+1).AddHours(-8).ToString("dd/MM/yyyy");
+            food.RealDate = dateTime;
 
             //DayTotal = await _context.DayTotal.FirstOrDefaultAsync(d => d.DayTotalID == 1);
             var dayTotal = await _context.DayTotal.FirstOrDefaultAsync(d => d.Date == food.Date);
@@ -136,6 +138,7 @@ namespace FoodCrud2.Controllers
                 DayTotal.TotalFats = food.Fats;
                 DayTotal.TotalProtein = food.Protein;
                 DayTotal.Date = food.Date;
+                DayTotal.RealDate = dateTime;
                 _context.DayTotal.Add(DayTotal);
             }
             else
@@ -144,6 +147,7 @@ namespace FoodCrud2.Controllers
                 dayTotal.TotalFats += food.Fats;
                 dayTotal.TotalProtein += food.Protein;
                 dayTotal.Date = food.Date;
+                dayTotal.RealDate = dateTime;
                 _context.Attach(dayTotal).State = EntityState.Modified;
             }
             

@@ -38,7 +38,7 @@ namespace FoodCrud2.Controllers
                 d.Date == dateTime.AddDays(date - index).AddHours(-8).ToString("dd/MM/yyyy"));
                 
 
-                Trace.WriteLine("Hello World!", index.ToString());
+                //Trace.WriteLine("Hello Worsld!", index.ToString());
 
                 if (temp == null)
                 {

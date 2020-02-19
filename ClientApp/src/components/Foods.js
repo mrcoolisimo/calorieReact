@@ -32,7 +32,8 @@ function buttonWait() {
     boo = false
   }
 
-const date = new Date();
+var usaTime = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
+const date = new Date(usaTime);
 const year = date.getFullYear();
 const month = date.getMonth();
 const day = date.getDate();
@@ -64,7 +65,7 @@ const Foods = ({classes,...props}) => {
             props.fetchAllFoods(num)
             props.fetchDate(num)
         }
-        setTimeout(buttonWait, 500)
+        setTimeout(buttonWait, 250)
     }
     const onFetchSubtract = () => {
         if (!boo) {
@@ -74,7 +75,7 @@ const Foods = ({classes,...props}) => {
             props.fetchAllFoods(num)
             props.fetchDate(num)
         }
-        setTimeout(buttonWait, 500)
+        setTimeout(buttonWait, 250)
     }
 
     const onDelete = foodID => {
@@ -84,45 +85,47 @@ const Foods = ({classes,...props}) => {
 
     const result = (record) => {
         return(
-            parseInt( record.fats ? record.fats : 0)*9 + 
+            (parseInt( record.fats ? record.fats : 0)*9 + 
             parseInt( record.carbs ? record.carbs : 0)*4 +
-            parseInt( record.protein ? record.protein : 0)*4
+            parseInt( record.protein ? record.protein : 0)*4)*
+            parseInt(record.servings ? record.servings : 1)
         )
     }
 
     
     return (
     <Paper className={classes.paper} elevation={5}>
+        
+        <div className="margin-tenth">
+            <Button
+                variant="contained"
+                className='float-left width-fourth blue'
+                onClick={onFetchSubtract}
+            >
+               {"<="} Prev
+            </Button>
+            <Button
+                variant="contained"
+                className='float-right width-fourth blue'
+                onClick={onFetchAdd}
+            >
+                Next {"=>"}
+            </Button>
+        </div>
+        <div className = "centerText font24 bold">{theDay}</div>
+        <br /> <br />
+        <FoodChart />
+        <br /><br /><br />
         <FoodForm {...({currentId,setCurrentId,num})}/>
+        <br /><br /><br />
+
         <Grid container>
-            <Grid item>
-                <div>
-                    {num}
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                        className='float-left width-half'
-                        disabled={false}
-                        onClick={onFetchSubtract}
-                    >
-                        Yesterday
-                    </Button>
-                    <Button
-                        variant="contained"
-                        className='float-right width-half'
-                        onClick={onFetchAdd}
-                    >
-                        Tomorrow
-                    </Button>
-                    <div>{theDay}</div>
-                </div>
-                
+            <Grid item className = "width-full">
                 <TableContainer>
                     <Table>
                         <TableHead className={classes.root}>
                             <TableRow>
-                                <TableCell>Name</TableCell>
+                                <TableCell>Name (Servings)</TableCell>
                                 <TableCell>Fats</TableCell>
                                 <TableCell>Carbs</TableCell>
                                 <TableCell>Protein</TableCell>
@@ -134,10 +137,10 @@ const Foods = ({classes,...props}) => {
                                 // #7 the list is ouput to the page
                                 props.FoodList.map((record,index)=>{
                                     return (<TableRow key={index} hover>
-                                            <TableCell>{record.name}</TableCell>
-                                            <TableCell>{record.fats}</TableCell>
-                                            <TableCell>{record.carbs}</TableCell>
-                                            <TableCell>{record.protein}</TableCell>
+                                            <TableCell>{record.name} ({record.servings})</TableCell>
+                                            <TableCell>{record.fats * record.servings}</TableCell>
+                                            <TableCell>{record.carbs * record.servings}</TableCell>
+                                            <TableCell>{record.protein * record.servings}</TableCell>
                                             <TableCell>{result(record)}</TableCell>
                                             <TableCell>
                                                 <ButtonGroup variant="text">
@@ -152,6 +155,8 @@ const Foods = ({classes,...props}) => {
                             }
                             </TableBody>
                     </Table>
+                    
+                    
                     {/* <Table>
                         <TableHead className={classes.root}>
                             <TableRow>
@@ -172,8 +177,6 @@ const Foods = ({classes,...props}) => {
                 </TableContainer>
             </Grid>
         </Grid>
-        
-        <FoodChart />
     </Paper>
         
     );

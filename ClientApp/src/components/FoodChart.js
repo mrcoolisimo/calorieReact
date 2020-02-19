@@ -58,8 +58,8 @@ const FoodChart = ({classes, ...props}) => {
                         label: 'Fats',
                         fill: false,
                         lineTension: 0,
-                        backgroundColor: 'rgba(0,192,0,1)',
-                        borderColor: 'rgba(0,192,0,1)',
+                        backgroundColor: 'rgba(154, 223, 65,1)',
+                        borderColor: 'rgba(154, 223, 65,1)',
                         borderWidth: 2,
                         data: arr
                     },
@@ -67,8 +67,8 @@ const FoodChart = ({classes, ...props}) => {
                         label: 'Carbs',
                         fill: false,
                         lineTension: 0,
-                        backgroundColor: 'rgba(150,0,0,1)',
-                        borderColor: 'rgba(150,0,0,1)',
+                        backgroundColor: 'rgba(233, 163, 58,1)',
+                        borderColor: 'rgba(233, 163, 58,1)',
                         borderWidth: 2,
                         data: arr2
                     },
@@ -76,8 +76,8 @@ const FoodChart = ({classes, ...props}) => {
                       label: 'Protein',
                       fill: false,
                       lineTension: 0,
-                      backgroundColor: 'rgba(0,0,150,1)',
-                      borderColor: 'rgba(0,0,150,1)',
+                      backgroundColor: 'rgba(50, 219, 197,1)',
+                      borderColor: 'rgba(50, 219, 197,1)',
                       borderWidth: 2,
                       data: arr3
                   }
@@ -86,7 +86,7 @@ const FoodChart = ({classes, ...props}) => {
             options={{
               title:{
                 display:true,
-                text:'Average Rainfall per month',
+                text:'Macronutrient Data in Last 7 Days',
                 fontSize:20
               },
               legend:{

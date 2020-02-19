@@ -9,6 +9,7 @@ namespace FoodCrud2.Models
 	{
 		public int FoodID { get; set; }
 		public string Name { get; set; }
+		public int Servings { get; set; }
 		public int Fats { get; set; }
 		public int Carbs { get; set; }
 		public int Protein { get; set; }

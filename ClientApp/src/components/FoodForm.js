@@ -26,16 +26,23 @@ const styles = theme => ({
 
 const initialFieldValues ={
     name: '',
+    servings: '',
     fats: '',
     carbs: '' ,
     protein: ''
 }
+
+
 
 const FoodForm = ({classes, ...props}) => {
 
     var num = props.num
     
     const { addToast } = useToasts()
+
+    function buttonWait() {
+        props.fetchDate(num)
+      }
 
     const validate = (fieldValues = values) => {
         let temp={...errors}
@@ -63,9 +70,10 @@ const FoodForm = ({classes, ...props}) => {
         resetForm
     } =useForm(initialFieldValues,validate, props.setCurrentId)
 
-    const result = parseInt( values.fats ? values.fats : 0)*9 + 
+    const result = (parseInt( values.fats ? values.fats : 0)*9 + 
                    parseInt( values.carbs ? values.carbs : 0)*4 +
-                   parseInt( values.protein ? values.protein : 0)*4
+                   parseInt( values.protein ? values.protein : 0)*4)*
+                   parseInt( values.servings ? values.servings : 1)
 
     const handleSubmit = e =>{
         e.preventDefault()
@@ -77,11 +85,12 @@ const FoodForm = ({classes, ...props}) => {
             }
             if(props.currentId==0) {
                 props.createFood(values, onSuccess, num)
-                props.fetchDate(num)
+                setTimeout(buttonWait, 2000)
             }
             else
                 props.updateFood(props.currentId, values, onSuccess)
-                props.fetchDate(num)
+                setTimeout(buttonWait, 1000)
+                
         }
     }
 
@@ -95,24 +104,40 @@ const FoodForm = ({classes, ...props}) => {
 
     return (
         <form autoComplete="off" noValidate className={classes} onSubmit={handleSubmit}>
-            <Grid container>
-                <Grid item>
+            <Grid container className = "">
+                <Grid item className = "width-full">
+                    <div className = "margin-center">
                     <TextField 
                     name="name"
                     variant="outlined"
                     label="Name"
                     value={values.name}
                     onChange={handleInputChange}
+                    className = "width-full"
                     //error={true}
                     //helperText={errors.name}
                     {...(errors.name && {error:true, helperText:errors.name})}
                     />
+                    <TextField 
+                    name="servings"
+                    variant="outlined"
+                    label="Servings"
+                    value={values.servings}
+                    onChange={handleInputChange}
+                    className = "width-full"
+                    //error={true}
+                    //helperText={errors.name}
+                    //{...(errors.name && {error:true, helperText:errors.name})}
+                    />
+                    </div>
+                    <div className="margin-center">
                     <TextField 
                     name="fats"
                     variant="outlined"
                     label="Fats"
                     value={values.fats}
                     onChange={handleInputChange}
+                    className = "width-third"
                     {...(errors.fats && {error:true, helperText:errors.fats})}
                     />
                     <TextField 
@@ -121,6 +146,7 @@ const FoodForm = ({classes, ...props}) => {
                     label="Carbs"
                     value={values.carbs}
                     onChange={handleInputChange}
+                    className = "width-third"
                     {...(errors.carbs && {error:true, helperText:errors.carbs})}
                     />
                     <TextField 
@@ -129,23 +155,25 @@ const FoodForm = ({classes, ...props}) => {
                     label="Protein"
                     value={values.protein}
                     onChange={handleInputChange}
+                    className = "width-third"
                     {...(errors.protein && {error:true, helperText:errors.protein})}
                     />
-                    <div>
-                        Calories: {result}
                     </div>
-                    <div>
+                    <div className = "centerText">
+                        Calories (estimate): {result}
+                    </div>
+                    <br></br>
+                    <div className="vertical-pad">
                         <Button
-                            variant="contained"
-                            color="primary"
                             type="submit"
-                            className='float-left width-half'
+                            variant="contained"
+                            className='float-left width-half green vertical-pad'
                         >
                                 Submit
                         </Button>
                         <Button
+                            className='float-right width-half grey vertical-pad'
                             variant="contained"
-                            className='float-right width-half'
                             onClick={resetForm}
                         >
                                 Reset

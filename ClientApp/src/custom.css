@@ -1,4 +1,8 @@
 /* Provide sufficient contrast against white background */
+* {
+  font-family: 'Ubuntu', sans-serif;
+}
+
 a {
   color: #0366d6;
 }
@@ -9,8 +13,8 @@ code {
 
 .btn-primary {
   color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  background-color: #b6dbff;
+  border-color: #3985d1;
 }
 
 /* Mine */
@@ -20,6 +24,69 @@ code {
 .float-right {
   float:right;
 }
+.width-fourth{
+  width:25%;
+}
+.width-third {
+  width:33.3%;
+}
 .width-half {
   width:50%;
+}
+.width-full{
+  width:100% !important;
+}
+.vertical-pad {
+  line-height:3rem !important;
+}
+.margin-center{
+  margin: auto;
+  width: 50%;
+}
+.margin-tenth{
+  margin:auto 10%;
+}
+.centerText {
+  text-align: center;
+}
+.font24 {
+  font-size:24px
+}
+.bold {
+  font-weight: bold;
+}
+.green {
+  background-color: greenyellow !important;
+  color: green !important;
+  transition: 0.3s !important;
+}
+.green:hover {
+  background-color: rgb(203, 255, 124) !important;
+  color: rgb(56, 161, 56) !important;
+}
+.grey {
+  background-color: rgb(214, 214, 214) !important;
+  color: rgb(104, 104, 104) !important;
+  transition: 0.3s !important;
+}
+.grey:hover {
+  background-color: rgb(223, 223, 223) !important;
+  color: rgb(167, 167, 167) !important;
+}
+.blue {
+  background-color: rgb(97, 228, 210) !important;
+  color: rgb(12, 150, 131) !important;
+  transition: 0.3s !important;
+}
+.blue:hover {
+  background-color: rgb(181, 238, 230) !important;
+  color: rgb(44, 184, 165) !important;
+}
+.bg-ylw {
+  background-color: rgb(212, 250, 255);
+}
+.bg-ylwe {
+  background-color: rgb(154, 223, 65);
+  background-color: rgb(50, 219, 197);
+  background-color: rgb(233, 163, 58);
 }

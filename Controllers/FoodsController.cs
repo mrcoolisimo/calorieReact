@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FoodCrud2.Data;
 using FoodCrud2.Models;
+using System.Diagnostics;
 
 namespace FoodCrud2.Controllers
 {
@@ -66,9 +67,9 @@ namespace FoodCrud2.Controllers
             if (dayTotal == null &&
                 food.Carbs + food.Fats + food.Protein != 0)
             {
-                DayTotal.TotalCarbs = food.Carbs;
-                DayTotal.TotalFats = food.Fats;
-                DayTotal.TotalProtein = food.Protein;
+                DayTotal.TotalCarbs = food.Carbs * food.Servings;
+                DayTotal.TotalFats = food.Fats * food.Servings;
+                DayTotal.TotalProtein = food.Protein * food.Servings;
                 DayTotal.Date = food.Date;
                 DayTotal.RealDate = food.RealDate;
                 _context.DayTotal.Add(DayTotal);
@@ -76,9 +77,9 @@ namespace FoodCrud2.Controllers
             //if the entry exists and we didnt give it a blank food
             if (dayTotal != null)
             {
-                dayTotal.TotalCarbs += food.Carbs - f00d.Carbs;
-                dayTotal.TotalFats += food.Fats - f00d.Fats;
-                dayTotal.TotalProtein += food.Protein - f00d.Protein;
+                dayTotal.TotalCarbs += (food.Carbs * food.Servings) - (f00d.Carbs * f00d.Servings);
+                dayTotal.TotalFats += (food.Fats * food.Servings) - (f00d.Fats * f00d.Servings);
+                dayTotal.TotalProtein += (food.Protein * food.Servings) - (f00d.Protein * f00d.Servings);
                 dayTotal.Date = food.Date;
 
                 if (dayTotal.TotalCarbs +
@@ -126,6 +127,7 @@ namespace FoodCrud2.Controllers
         [HttpPost]
         public async Task<ActionResult<Food>> PostFood(Food food, int num)
         {
+            Trace.WriteLine("222222222222222222222222222!", food.ToString());
             var dateTime = DateTime.UtcNow.Date.AddDays(num+1).AddHours(-8);
             food.Date = DateTime.UtcNow.Date.AddDays(num+1).AddHours(-8).ToString("dd/MM/yyyy");
             food.RealDate = dateTime;
@@ -134,18 +136,19 @@ namespace FoodCrud2.Controllers
             var dayTotal = await _context.DayTotal.FirstOrDefaultAsync(d => d.Date == food.Date);
             if (dayTotal == null)
             {
-                DayTotal.TotalCarbs = food.Carbs;
-                DayTotal.TotalFats = food.Fats;
-                DayTotal.TotalProtein = food.Protein;
+                DayTotal.TotalCarbs = food.Carbs * food.Servings;
+                DayTotal.TotalFats = food.Fats * food.Servings;
+                DayTotal.TotalProtein = food.Protein * food.Servings;
                 DayTotal.Date = food.Date;
                 DayTotal.RealDate = dateTime;
                 _context.DayTotal.Add(DayTotal);
             }
             else
             {
-                dayTotal.TotalCarbs += food.Carbs;
-                dayTotal.TotalFats += food.Fats;
-                dayTotal.TotalProtein += food.Protein;
+                Trace.WriteLine("33333333333333333333333!", food.ToString());
+                dayTotal.TotalCarbs += food.Carbs * food.Servings;
+                dayTotal.TotalFats += food.Fats * food.Servings;
+                dayTotal.TotalProtein += food.Protein * food.Servings;
                 dayTotal.Date = food.Date;
                 dayTotal.RealDate = dateTime;
                 _context.Attach(dayTotal).State = EntityState.Modified;
@@ -168,9 +171,9 @@ namespace FoodCrud2.Controllers
             }
 
             var dayTotal = await _context.DayTotal.FirstOrDefaultAsync(d => d.Date == food.Date);
-            dayTotal.TotalCarbs -= food.Carbs;
-            dayTotal.TotalFats -= food.Fats;
-            dayTotal.TotalProtein -= food.Protein;
+            dayTotal.TotalCarbs -= food.Carbs * food.Servings;
+            dayTotal.TotalFats -= food.Fats * food.Servings;
+            dayTotal.TotalProtein -= food.Protein * food.Servings;
             dayTotal.Date = food.Date;
             
             if (dayTotal.TotalCarbs +

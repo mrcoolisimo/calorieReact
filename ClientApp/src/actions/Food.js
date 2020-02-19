@@ -11,6 +11,7 @@ export const ACTION_TYPES = {
 const formatData = data => ({
     ...data,
     // Change these into integers
+    servings : parseInt( data.servings ? data.servings : 1 ),
     fats : parseInt( data.fats ? data.fats : 0 ),
     carbs : parseInt( data.carbs ? data.carbs : 0 ),
     protein : parseInt( data.protein ? data.protein : 0 )
@@ -35,6 +36,7 @@ export const fetchAll = (num) => dispatch =>
 
 export const create = (data, onSuccess, num) => dispatch =>{
     data = formatData(data)
+    console.log("create", data)
     api.Food().create(data,num)
     .then(res =>{
         dispatch({
